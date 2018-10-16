@@ -1,0 +1,28 @@
+
+
+
+
+# I may have reversed my relationships :/  inconsistently :(
+
+
+# RANDOM SELECTION OF ISA CODES IN DB
+# Yields labels only
+select * where { 
+	?s ns1:isA ?o .
+} ORDER BY RAND() limit 100 
+
+
+
+# RANDOM SELECTION OF THINGS IN DB
+# Yeilds labels only
+select * where { 
+	?s ?p ?o .
+} ORDER BY RAND() limit 100 
+
+
+
+
+
+
+
+
