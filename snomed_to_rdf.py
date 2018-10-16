@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-#GOAL - load simple snomed data into RDF format 
+#GOAL - load simple snomed data into RDF format
 
 datadir = "/home/selah/Data/SnomedCT/"
 snopath = datadir +"SnomedCT_InternationalRF2_PRODUCTION_20180731T120000Z/Snapshot/"
@@ -37,7 +37,7 @@ from rdflib import Graph
 from rdflib import URIRef
 from rdflib import Literal
 
-r_isa = URIRef("relationship/isA")
+r_ischild = URIRef("relationship/isChildOf")
 r_map = URIRef("relationship/map")
 r_lab = URIRef("relationship/label")
 
@@ -58,7 +58,7 @@ labels_to_load_snomed = dfdesc_graph[['conceptId', 'term']].set_index('conceptId
 g = Graph() 
 
 for (idx, (s,o)) in edges_to_load_snomed.iterrows():
-    g.add((concept_uri_snomed(s), r_isa, concept_uri_snomed(o)))
+    g.add((concept_uri_snomed(s), r_ischild, concept_uri_snomed(o)))
 
 for (s, vals) in labels_to_load_snomed.iterrows():
     o=vals[0]
@@ -78,14 +78,14 @@ labels_to_load_icd10 = icd_labels.loc[icds_to_label]
 
 #%%
 
-for (idx, (s,o)) in edges_to_load_icdmap.iterrows():
-    g.add((concept_uri_snomed(s), r_isa, concept_uri_icd(o)))
+for (idx, (sno, icd)) in edges_to_load_icdmap.iterrows():
+    g.add((concept_uri_icd(icd), r_map, concept_uri_snomed(sno)))
 
-for (s, vals) in labels_to_load_icd10.iterrows():
-    o=vals[0]
-    g.add((concept_uri_icd(s), r_lab, Literal(o)))
+for (icd, vals) in labels_to_load_icd10.iterrows():
+    lab=vals[0]
+    g.add((concept_uri_icd(icd), r_lab, Literal(lab)))
     
 #%%    
 print("Writing to turtle file...")
 
-g.serialize(destination=datadir + 'SNOMED_ICD_selah.ttl', format='turtle')
+%time g.serialize(destination=datadir + 'SNOMED_ICD_selah.ttl', format='turtle')

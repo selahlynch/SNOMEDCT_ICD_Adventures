@@ -2,13 +2,20 @@
 
 
 
-# I may have reversed my relationships :/  inconsistently :(
 
+# RANDOM SELECTION OF iSChildOf and map CODES IN DB
+# Yields labels only
+PREFIX ns1: <file:/uploaded/generated/relationship/>
+select ?s ?p ?o where { 
+    ?s ?p ?o .
+    FILTER (?p IN (ns1:map, ns1:isChildOf))
+}
+ORDER BY RAND() limit 100 
 
 # RANDOM SELECTION OF ISA CODES IN DB
 # Yields labels only
 select * where { 
-	?s ns1:isA ?o .
+	?s ns1:isChildOf ?o .
 } ORDER BY RAND() limit 100 
 
 
