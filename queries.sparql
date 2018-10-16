@@ -1,6 +1,33 @@
 
 
+PREFIX ns1: <file:/uploaded/generated/relationship/>
+PREFIX cptsno: <file:/uploaded/generated/concept/snomed/>
+PREFIX cpticd: <file:/uploaded/generated/concept/icd10/>
+# SELECT ALL ANCESTORS OF ANXIETY!!!!!
+select * where { 
+	cpticd:F41.9 ns1:map ?o .
+    ?o ns1:isChildOf* ?o2 .
+    ?o2 ns1:label ?lab .
+} limit 100 
 
+
+PREFIX ns1: <file:/uploaded/generated/relationship/>
+PREFIX cptsno: <file:/uploaded/generated/concept/snomed/>
+PREFIX cpticd: <file:/uploaded/generated/concept/icd10/>
+# SELECT ANXIETY MAPS
+select * where { 
+	cpticd:F41.9 ns1:map ?o .
+    ?o ns1:label ?lab .
+} limit 100 
+
+
+# SELECT neoplasm concepts
+PREFIX ns1: <file:/uploaded/generated/relationship/>
+PREFIX cpticd: <file:/uploaded/generated/concept/icd10/>
+select ?s ?o where { 
+    ?s ns1:label ?o .
+    FILTER REGEX(?o, "neoplasm")
+}
 
 
 # RANDOM SELECTION OF iSChildOf and map CODES IN DB
@@ -11,6 +38,7 @@ select ?s ?p ?o where {
     FILTER (?p IN (ns1:map, ns1:isChildOf))
 }
 ORDER BY RAND() limit 100 
+
 
 # RANDOM SELECTION OF ISA CODES IN DB
 # Yields labels only
