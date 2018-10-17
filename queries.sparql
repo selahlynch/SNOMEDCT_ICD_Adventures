@@ -3,6 +3,17 @@
 PREFIX ns1: <file:/uploaded/generated/relationship/>
 PREFIX cptsno: <file:/uploaded/generated/concept/snomed/>
 PREFIX cpticd: <file:/uploaded/generated/concept/icd10/>
+# CONSTRUCT GRAPH OF ANCESTORS OF ANXIETY!!!!!
+CONSTRUCT {?sno_kid ns1:isSubclassOf ?sno_parent.} where { 
+	cpticd:F41.9 ns1:map ?sno_kid .
+    ?sno_kid ns1:isChildOf* ?sno_parent .
+    ?sno_parent ns1:label ?label .
+} limit 100 
+
+
+PREFIX ns1: <file:/uploaded/generated/relationship/>
+PREFIX cptsno: <file:/uploaded/generated/concept/snomed/>
+PREFIX cpticd: <file:/uploaded/generated/concept/icd10/>
 # SELECT ALL ANCESTORS OF ANXIETY!!!!!
 select * where { 
 	cpticd:F41.9 ns1:map ?o .

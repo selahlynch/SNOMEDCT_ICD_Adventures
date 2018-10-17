@@ -50,6 +50,7 @@ concept_uri_icd = lambda c: URIRef("concept/icd10/" + str(c))
 print("Loading SNOMED to RDF...")
 
 edges_to_load_snomed = dfrel_graph[['sourceId', 'destinationId']]#.sample(500)
+edges_to_load_snomed.columns = ['sno_child', 'sno_parent']
 loaded_concepts_list_snomed = uconcepts_from_edges(edges_to_load_snomed)
 labels_to_load_snomed = dfdesc_graph[['conceptId', 'term']].set_index('conceptId').loc[loaded_concepts_list_snomed]
 
@@ -71,6 +72,7 @@ print("Loading ICD to RDF...")
 maps_of_loaded_concepts = dficd10map.merge(loaded_concepts_list_snomed.to_frame('poop'), left_on='referencedComponentId', right_on='poop')
 
 edges_to_load_icdmap = maps_of_loaded_concepts[['referencedComponentId','mapTarget']].dropna()
+edges_to_load_icdmap.columns = ['snomed', 'icd10']
 
 icd_labels = dficd10map[['mapTarget', 'mapTargetName']].dropna().drop_duplicates().set_index('mapTarget')
 icds_to_label = edges_to_load_icdmap['mapTarget'].drop_duplicates()
@@ -89,3 +91,11 @@ for (icd, vals) in labels_to_load_icd10.iterrows():
 print("Writing to turtle file...")
 
 %time g.serialize(destination=datadir + 'SNOMED_ICD_selah.ttl', format='turtle')
+
+#%% To CSV FOR PATRICK
+
+edges_to_load_snomed.to_csv(datadir + "patryk_snomedct_graph.csv", index=False)
+edges_to_load_icdmap.to_csv(datadir + "patryk_snomed_to_icd10_umls.csv", index=False)
+
+labels_to_load_snomed.to_csv(datadir + "patryk_snomedct_labels.csv")
+labels_to_load_icd10.to_csv(datadir + "patryk_icd10_labels.csv")
